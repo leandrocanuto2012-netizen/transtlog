@@ -1,328 +1,790 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proposta e Contrato — TransitLog</title>
-    <!-- Biblioteca para gerar PDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Arial', 'Helvetica', sans-serif;
-        }
-        body {
-            background: #f7fafc;
-            padding: 20px;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-        .contador-box {
-            background: linear-gradient(90deg, #dc2626, #ea580c);
-            color: white;
-            padding: 18px;
-            border-radius: 10px;
-            text-align: center;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
-        }
-        .contador {
-            font-size: 32px;
-            font-weight: bold;
-            margin: 8px 0;
-        }
-        .contador span {
-            background: white;
-            color: #dc2626;
-            padding: 6px 14px;
-            border-radius: 6px;
-            margin: 0 4px;
-        }
-        .card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-            margin-bottom: 25px;
-            overflow: hidden;
-        }
-        .cabecalho {
-            background: #1e3a5f;
-            color: white;
-            padding: 25px;
-            text-align: center;
-        }
-        .cabecalho h1 { font-size: 22px; margin-bottom: 5px; }
-        .conteudo { padding: 30px; color: #333; line-height: 1.8; }
-        h2 { font-size: 16px; color: #1e3a5f; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; margin: 25px 0 15px; text-transform: uppercase; }
-        h3 { font-size: 14px; margin: 15px 0 10px; }
-        p { margin-bottom: 10px; text-align: justify; font-size: 12pt; text-indent: 30px; }
-        table { width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 11pt; }
-        th, td { padding: 10px; text-align: left; border: 1px solid #ccc; }
-        th { background: #f0f4f8; font-weight: bold; }
-        .destaque { background: #f0fdf4; border-left: 4px solid #16a34a; padding: 15px; border-radius: 6px; margin: 15px 0; text-indent: 0; }
-        .aviso { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 15px; border-radius: 6px; margin: 15px 0; text-indent: 0; }
-        .assinatura-area { margin-top: 50px; padding-top: 30px; border-top: 1px dashed #999; }
-        .assinatura-linhas { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 30px; margin-top: 60px; }
-        .assinatura-col { flex: 1; min-width: 250px; text-align: center; }
-        .linha { border-bottom: 1px solid #000; margin: 40px 0 10px; }
-        .botoes { display: flex; gap: 15px; flex-wrap: wrap; margin: 30px 0; }
-        .btn-aceitar, .btn-pdf {
-            flex: 1;
-            min-width: 220px;
-            border: none;
-            padding: 16px;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        .btn-aceitar { background: linear-gradient(90deg, #16a34a, #15803d); color: white; }
-        .btn-pdf { background: linear-gradient(90deg, #3b82f6, #1d4ed8); color: white; }
-        .btn-aceitar:hover, .btn-pdf:hover { transform: translateY(-2px); }
-        .vencido { display: none; background: #fee2e2; color: #b91c1c; padding: 40px; text-align: center; border-radius: 10px; }
-        .aceito-box { display: none; background: #dcfce7; color: #166534; padding: 25px; border-radius: 8px; text-align: center; margin-top: 20px; }
-        ul { margin-left: 30px; margin-bottom: 15px; text-align: justify; }
-        li { margin-bottom: 8px; font-size: 12pt; }
-        .pagina-vencida { display: none; }
-        .recuo-zero { text-indent: 0; }
-        
-        /* === REGRAS ABNT PARA PDF === */
-        @media print {
-            .contador-box, .botoes { display: none !important; }
-            body { background: white; padding: 2cm 3cm; max-width: 100%; }
-            .card { box-shadow: none; margin: 0; }
-            .cabecalho { background: none; color: black; border-bottom: 2px solid #1e3a5f; }
-            h2 { page-break-after: avoid; }
-            p, li { line-height: 1.5; font-size: 12pt; }
-            @page { margin: 3cm; size: A4; }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Proposta e Contrato — TransitLog</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <style>
+    :root{
+      --bg: #f3f0ea;
+      --paper: #fffdf9;
+      --ink: #1f2937;
+      --muted: #5b6472;
+      --line: #d7d2c8;
+      --accent: #17324d;
+      --accent-2: #8c6a3b;
+      --ok: #1f6b3a;
+      --ok-bg: #e8f5ec;
+      --warn: #8a3c14;
+      --warn-bg: #fff4e8;
+      --danger: #9f1d1d;
+      --danger-bg: #fdecec;
+      --shadow: 0 18px 50px rgba(24, 31, 42, .09);
+      --radius: 18px;
+    }
+
+    *{ box-sizing:border-box; margin:0; padding:0; }
+
+    html{ scroll-behavior:smooth; }
+
+    body{
+      background:
+        radial-gradient(circle at top left, rgba(140,106,59,.08), transparent 28%),
+        linear-gradient(180deg, #f6f3ee 0%, #ede8df 100%);
+      color: var(--ink);
+      font-family: "Source Sans 3", sans-serif;
+      padding: 28px 16px 48px;
+    }
+
+    .shell{
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .reveal{
+      opacity: 0;
+      transform: translateY(24px);
+      animation: rise .8s ease forwards;
+    }
+    .delay-1{ animation-delay: .08s; }
+    .delay-2{ animation-delay: .16s; }
+    .delay-3{ animation-delay: .24s; }
+
+    @keyframes rise{
+      to{ opacity:1; transform:translateY(0); }
+    }
+
+    .contador-box{
+      background: linear-gradient(135deg, #8e261f 0%, #c6601e 100%);
+      color:#fff;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 18px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255,255,255,.18);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .contador-box::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(120deg, transparent 0 35%, rgba(255,255,255,.11) 50%, transparent 65% 100%);
+      pointer-events:none;
+    }
+
+    .contador-head{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      justify-content:space-between;
+      flex-wrap:wrap;
+      margin-bottom:10px;
+    }
+
+    .contador-title{
+      font-weight:700;
+      letter-spacing:.05em;
+    }
+
+    .contador{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      font-size: clamp(1.2rem, 3vw, 2rem);
+      font-weight:700;
+      margin: 6px 0 4px;
+    }
+
+    .contador span{
+      min-width: 62px;
+      text-align:center;
+      color:#8e261f;
+      background:#fff;
+      border-radius:10px;
+      padding: 8px 10px;
+      box-shadow: inset 0 -2px 0 rgba(0,0,0,.06);
+    }
+
+    .paper{
+      background: var(--paper);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(23,50,77,.08);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .paper::before{
+      content:"";
+      position:absolute;
+      left:0; top:0; right:0;
+      height: 8px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    }
+
+    .cabecalho{
+      padding: 34px 28px 22px;
+      background:
+        linear-gradient(180deg, rgba(23,50,77,.03), rgba(23,50,77,0)),
+        linear-gradient(90deg, rgba(140,106,59,.06), transparent 40%);
+      border-bottom:1px solid var(--line);
+    }
+
+    .marca{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:18px;
+      flex-wrap:wrap;
+    }
+
+    .selo{
+      min-width: 86px;
+      height: 86px;
+      border-radius: 50%;
+      border: 1px solid rgba(23,50,77,.18);
+      display:grid;
+      place-items:center;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(140,106,59,.18), transparent 45%),
+        #faf7f1;
+      color: var(--accent);
+      font-family: "Cormorant Garamond", serif;
+      font-size: 1rem;
+      letter-spacing: .12em;
+      text-align:center;
+      line-height:1.05;
+      padding: 8px;
+    }
+
+    .titulo-wrap{
+      flex:1;
+      min-width: 240px;
+    }
+
+    .eyebrow{
+      color: var(--accent-2);
+      font-size: .9rem;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      font-weight: 700;
+    }
+
+    h1{
+      font-family: "Cormorant Garamond", serif;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: .95;
+      letter-spacing: .01em;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .subtitulo{
+      font-size: 1.06rem;
+      color: var(--muted);
+    }
+
+    .meta{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(140px, 1fr));
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .meta div{
+      padding: 12px 14px;
+      border:1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255,255,255,.6);
+      backdrop-filter: blur(8px);
+    }
+
+    .meta strong{
+      display:block;
+      color: var(--accent);
+      font-size: .82rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 4px;
+    }
+
+    .conteudo{
+      padding: 28px;
+    }
+
+    .secao{
+      margin-bottom: 28px;
+    }
+
+    h2{
+      font-family: "Cormorant Garamond", serif;
+      color: var(--accent);
+      font-size: 1.75rem;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    h3{
+      color: var(--accent);
+      font-size: 1.08rem;
+      margin: 16px 0 10px;
+      text-transform: uppercase;
+      letter-spacing: .03em;
+    }
+
+    p, li{
+      font-size: 12pt;
+      line-height: 1.7;
+      text-align: justify;
+      color: var(--ink);
+    }
+
+    p{
+      margin-bottom: 10px;
+      text-indent: 1.25cm;
+    }
+
+    .sem-recuo{ text-indent:0; }
+
+    .box{
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--accent-2);
+      background: linear-gradient(180deg, #fffdfa, #faf6ef);
+      border-radius: 12px;
+      padding: 16px;
+      margin: 14px 0;
+    }
+
+    .box.ok{
+      border-left-color: var(--ok);
+      background: var(--ok-bg);
+    }
+
+    .box.warn{
+      border-left-color: var(--warn);
+      background: var(--warn-bg);
+    }
+
+    table{
+      width:100%;
+      border-collapse: collapse;
+      margin: 14px 0 18px;
+      font-size: 11.5pt;
+    }
+
+    th, td{
+      border:1px solid #cfc8bb;
+      padding: 10px 12px;
+      vertical-align: top;
+    }
+
+    th{
+      text-align:left;
+      color: var(--accent);
+      background: #f6f1e7;
+      font-weight: 700;
+    }
+
+    td:last-child, th:last-child{
+      text-align:right;
+      white-space: nowrap;
+    }
+
+    ul{
+      margin: 8px 0 0 22px;
+      padding-left: 10px;
+    }
+
+    li{ margin-bottom: 8px; }
+
+    .assinatura-area{
+      margin-top: 34px;
+      padding-top: 18px;
+      border-top: 1px dashed #a89f90;
+    }
+
+    .botoes{
+      display:flex;
+      gap:14px;
+      flex-wrap:wrap;
+      margin: 22px 0 20px;
+    }
+
+    button{
+      appearance:none;
+      border:none;
+      cursor:pointer;
+      border-radius: 999px;
+      padding: 14px 20px;
+      font-size: 1rem;
+      font-weight: 700;
+      transition: transform .22s ease, box-shadow .22s ease, filter .22s ease;
+      min-width: 220px;
+      font-family: "Source Sans 3", sans-serif;
+    }
+
+    button:hover{
+      transform: translateY(-2px) scale(1.01);
+      box-shadow: 0 12px 24px rgba(0,0,0,.12);
+      filter: saturate(1.06);
+    }
+
+    button:active{ transform: translateY(0) scale(.99); }
+
+    .btn-aceitar{
+      color:#fff;
+      background: linear-gradient(135deg, #1f6b3a, #2b8f50);
+    }
+
+    .btn-pdf{
+      color:#fff;
+      background: linear-gradient(135deg, #17324d, #32597f);
+    }
+
+    .aceito-box{
+      display:none;
+      margin-top: 10px;
+      border-radius: 12px;
+      padding: 16px;
+      background: var(--ok-bg);
+      color: #184f2c;
+      border: 1px solid rgba(31,107,58,.18);
+    }
+
+    .assinatura-linhas{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(220px, 1fr));
+      gap: 34px;
+      margin-top: 48px;
+    }
+
+    .assinatura-col{
+      text-align:center;
+    }
+
+    .linha{
+      border-bottom: 1px solid #1b1b1b;
+      margin-bottom: 10px;
+      height: 34px;
+    }
+
+    .rodape-data{
+      text-align:center;
+      margin-top: 34px;
+      color: var(--muted);
+    }
+
+    .vencido{
+      display:none;
+      padding: 44px 24px;
+      text-align:center;
+      border-radius: 18px;
+      background: var(--danger-bg);
+      border: 1px solid rgba(159,29,29,.15);
+      color: var(--danger);
+      box-shadow: var(--shadow);
+    }
+
+    .pagina-vencida{ display:none; }
+
+    .obs{
+      color: var(--muted);
+      font-size: .98rem;
+    }
+
+    @media (max-width: 740px){
+      .meta{ grid-template-columns: 1fr; }
+      .assinatura-linhas{ grid-template-columns: 1fr; }
+      .cabecalho, .conteudo{ padding: 22px 18px; }
+      .contador span{ min-width: 52px; }
+      button{ width:100%; }
+    }
+
+    @media print{
+      body{
+        background:#fff !important;
+        padding:0 !important;
+        color:#000;
+      }
+      .shell{
+        max-width: 100%;
+        margin:0;
+      }
+      .contador-box, .botoes{
+        display:none !important;
+      }
+      .paper{
+        box-shadow:none !important;
+        border:none !important;
+        border-radius:0 !important;
+      }
+      .paper::before{ display:none; }
+      .cabecalho{
+        background:none !important;
+        border-bottom:1px solid #000 !important;
+      }
+      .meta div, .box{
+        background:#fff !important;
+        backdrop-filter:none !important;
+      }
+      h2, h3, table, tr, td, th, p, li{
+        page-break-inside: avoid;
+      }
+      @page{
+        size: A4;
+        margin: 3cm 2cm 2cm 3cm;
+      }
+    }
+  </style>
 </head>
 <body>
+  <main class="shell">
+    <section class="contador-box reveal delay-1" id="contador-section" aria-live="polite">
+      <div class="contador-head">
+        <div class="contador-title">⏳ PROPOSTA VÁLIDA POR 24 HORAS</div>
+        <div class="obs">Após o vencimento, os valores poderão ser alterados.</div>
+      </div>
+      <div class="contador" aria-label="Contador regressivo">
+        <span id="h">23</span>:<span id="m">59</span>:<span id="s">59</span>
+      </div>
+    </section>
 
-    <!-- === CONTADOR REGRESSIVO === -->
-    <div class="contador-box" id="contador-section">
-        <strong>⏳ PROPOSTA VÁLIDA POR 24 HORAS</strong>
-        <div class="contador">
-            <span id="h">23</span>:<span id="m">59</span>:<span id="s">59</span>
-        </div>
-        <small>Após o vencimento, os valores estarão sujeitos a alteração</small>
-    </div>
+    <section class="pagina-vencida" id="pagina-vencida">
+      <div class="vencido" style="display:block;">
+        <h2 style="border-bottom:none; margin-bottom:12px;">⏰ Proposta expirada</h2>
+        <p class="sem-recuo" style="text-align:center;">Esta proposta não está mais disponível. Entre em contato para emissão de nova versão.</p>
+        <p class="sem-recuo" style="text-align:center; margin-top:12px;"><strong>Leandro Canuto — CPF: 065.727.039-32</strong></p>
+      </div>
+    </section>
 
-    <!-- === PROPOSTA VENCIDA === -->
-    <div class="pagina-vencida" id="pagina-vencida">
-        <div class="vencido" style="display:block;">
-            <h2>⏰ PROPOSTA EXPIRADA</h2>
-            <p>Esta proposta não está mais disponível. Entre em contato para receber uma nova.</p>
-            <p style="margin-top:15px; font-weight:bold;">Leandro Canuto — CPF: 065.727.039-32</p>
-        </div>
-    </div>
+    <section id="conteudo-principal" class="reveal delay-2">
+      <article class="paper" id="conteudo-para-pdf">
+        <header class="cabecalho">
+          <div class="marca">
+            <div class="titulo-wrap">
+              <div class="eyebrow">Proposta comercial e instrumento contratual</div>
+              <h1>Proposta e Contrato de Prestação de Serviços</h1>
+              <p class="subtitulo sem-recuo">TransitLog Logística e Transportes</p>
+            </div>
+            <div class="selo" aria-hidden="true">TRANSIT<br>LOG</div>
+          </div>
 
-    <!-- === CONTEÚDO PRINCIPAL === -->
-    <div id="conteudo-principal">
-
-    <div class="card" id="conteudo-para-pdf">
-        <div class="cabecalho">
-            <h1>PROPOSTA E CONTRATO DE PRESTAÇÃO DE SERVIÇOS</h1>
-            <p style="text-indent:0;">TransitLog Logística e Transportes</p>
-            <p style="text-indent:0; font-style: italic;">Proposta Nº ____/2026 — Data: ___/___/2026 — Página 1 de 1</p>
-        </div>
+          <div class="meta">
+            <div>
+              <strong>Proposta</strong>
+              <span>Nº ____/2026</span>
+            </div>
+            <div>
+              <strong>Data</strong>
+              <span>___/___/2026</span>
+            </div>
+            <div>
+              <strong>Documento</strong>
+              <span>Versão para impressão em PDF</span>
+            </div>
+          </div>
+        </header>
 
         <div class="conteudo">
+          <section class="secao">
+            <h2>1. Das partes</h2>
+            <p class="sem-recuo"><strong>Contratante:</strong> TransitLog Logística e Transportes, inscrita no CNPJ sob o nº _______________, com sede em _______________, Curitiba/PR, CEP _______________.</p>
+            <p class="sem-recuo"><strong>Contratado/Prestador de Serviços:</strong> Leandro Canuto, inscrito no CPF sob o nº 065.727.039-32, residente e domiciliado em Curitiba/PR, contato: (41) __________.</p>
+          </section>
 
-            <!-- DADOS DAS PARTES -->
-            <h2>1. DAS PARTES</h2>
-            <p class="recuo-zero"><strong>Contratante:</strong> TransitLog Logística e Transportes, CNPJ: _______________, com sede em _______________, Curitiba/PR, CEP: _______________.</p>
-            <p class="recuo-zero"><strong>Contratado/Prestador de Serviço:</strong> Leandro Canuto, CPF: 065.727.039-32, residente e domiciliado em Curitiba/PR, contato: (41) __________.</p>
+          <section class="secao">
+            <h2>2. Do objeto</h2>
+            <p>O presente instrumento tem por objeto a prestação de serviços técnicos especializados, compreendendo a implantação de sistema de gestão operacional e logística, o desenvolvimento de site institucional, o desenvolvimento de aplicativo móvel, o treinamento de equipe, a hospedagem, a manutenção contínua e a consultoria especializada, conforme as condições e especificações estabelecidas neste instrumento.</p>
+            <p>Inclui-se no escopo a disponibilização de até 15 (quinze) usuários ativos no sistema durante a vigência contratual, sem limitação de acesso aos módulos contratados.</p>
+          </section>
 
-            <!-- OBJETO -->
-            <h2>2. OBJETO DO CONTRATO</h2>
-            <p>O presente instrumento tem por objeto a prestação de serviços técnicos especializados compreendendo: a implantação de sistema de gestão operacional e logística; desenvolvimento de site institucional; aplicativo móvel; treinamento de equipe; hospedagem; manutenção contínua; e consultoria especializada, conforme condições e especificações estabelecidas neste instrumento.</p>
-            <p>Inclui-se no escopo a disponibilidade de 15 (quinze) usuários ativos no sistema durante a vigência contratual, sem limite de acesso aos módulos.</p>
-
-            <!-- VALORES DA ENTRADA -->
-            <h2>3. VALOR DA ENTRADA E ACEITE</h2>
-            <div class="destaque">
-                <p class="recuo-zero"><strong>Opção 1 — Pagamento via PIX (à vista):</strong> R$ 1.250,00 (um mil, duzentos e cinquenta reais), com desconto de R$ 250,00.</p>
-                <p class="recuo-zero"><strong>Opção 2 — Pagamento via Boleto:</strong> R$ 1.500,00 (um mil e quinhentos reais), valor emitido sem desconto.</p>
+          <section class="secao">
+            <h2>3. Do valor da entrada e do aceite</h2>
+            <div class="box">
+              <p class="sem-recuo"><strong>Opção 1 — Pagamento via PIX (à vista):</strong> R$ 1.250,00 (mil duzentos e cinquenta reais), com desconto de R$ 250,00 (duzentos e cinquenta reais).</p>
+              <p class="sem-recuo"><strong>Opção 2 — Pagamento via boleto bancário:</strong> R$ 1.500,00 (mil e quinhentos reais), sem desconto.</p>
             </div>
+          </section>
 
-            <!-- DETALHAMENTO -->
-            <h2>4. DETALHAMENTO DOS SERVIÇOS E VALORES</h2>
-            
-            <h3>4.1 — Valores Únicos de Implantação</h3>
+          <section class="secao">
+            <h2>4. Do detalhamento dos serviços e valores</h2>
+
+            <h3>4.1. Valores únicos de implantação</h3>
             <table>
-                <tr><th style="width:70%;">Descrição do Serviço</th><th style="width:30%;">Valor R$</th></tr>
-                <tr><td>Implantação e configuração do Sistema de Gestão Logística</td><td>R$ 2.875,00</td></tr>
-                <tr><td>Desenvolvimento do Site Institucional com área de rastreamento</td><td>R$ 2.070,00</td></tr>
-                <tr><td>Desenvolvimento do Aplicativo Móvel — Android e iOS</td><td>R$ 2.530,00</td></tr>
-                <tr><td>Consultoria e Busca de Linhas de Crédito Específicas do Setor</td><td>R$ 2.070,00</td></tr>
+              <thead>
+                <tr>
+                  <th style="width:72%;">Descrição do serviço</th>
+                  <th style="width:28%;">Valor</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Implantação e configuração do Sistema de Gestão Logística</td>
+                  <td>R$ 2.875,00</td>
+                </tr>
+                <tr>
+                  <td>Desenvolvimento do Site Institucional com área de rastreamento</td>
+                  <td>R$ 2.070,00</td>
+                </tr>
+                <tr>
+                  <td>Desenvolvimento do Aplicativo Móvel — Android e iOS</td>
+                  <td>R$ 2.530,00</td>
+                </tr>
+                <tr>
+                  <td>Consultoria e busca de linhas de crédito específicas do setor</td>
+                  <td>R$ 2.070,00</td>
+                </tr>
+              </tbody>
             </table>
 
-            <h3>4.2 — Valor Mensal de Manutenção e Suporte — 6 (seis) meses</h3>
+            <h3>4.2. Valor mensal de manutenção e suporte — 6 (seis) meses</h3>
             <table>
-                <tr><th>Descrição</th><th>Valor Mensal R$</th></tr>
-                <tr><td>Suporte técnico contínuo, hospedagem, backups, manutenção e até 2 visitas/reuniões presenciais por mês</td><td>R$ 2.300,00</td></tr>
+              <thead>
+                <tr>
+                  <th>Descrição</th>
+                  <th>Valor mensal</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Suporte técnico contínuo, hospedagem, backups, manutenção e até 2 (duas) visitas ou reuniões presenciais por mês</td>
+                  <td>R$ 2.300,00</td>
+                </tr>
+              </tbody>
             </table>
 
-            <div class="aviso">
-                <p class="recuo-zero"><strong>Parágrafo único — Atendimentos extras:</strong> Visitas, reuniões ou atendimentos presenciais que excederem o limite de 2 (dois) por mês serão cobrados no valor unitário de R$ 150,00 (cento e cinquenta reais) por evento, mediante prévia e expressa aprovação do Contratante.</p>
+            <div class="box warn">
+              <p class="sem-recuo"><strong>Parágrafo único — Atendimentos extras:</strong> as visitas, reuniões ou atendimentos presenciais que excederem o limite de 2 (dois) por mês serão cobrados no valor unitário de R$ 150,00 (cento e cinquenta reais) por evento, mediante prévia e expressa aprovação do Contratante.</p>
+            </div>
+          </section>
+
+          <section class="secao">
+            <h2>5. Do escopo dos serviços</h2>
+            <ul>
+              <li><strong>5.1.</strong> Treinamento na modalidade online/virtual para até 10 (dez) membros da equipe indicados pelo Contratante.</li>
+              <li><strong>5.2.</strong> Até 2 (duas) visitas ou reuniões presenciais por mês para implantação, ajustes técnicos, alinhamento e acompanhamento operacional.</li>
+              <li><strong>5.3.</strong> Hospedagem em infraestrutura em nuvem, banco de dados, backups automáticos e monitoramento 24 (vinte e quatro) horas por dia, 7 (sete) dias por semana.</li>
+              <li><strong>5.4.</strong> Manutenção corretiva do código e implantação de atualizações durante a vigência contratual.</li>
+              <li><strong>5.5.</strong> A taxa de êxito de 2% (dois por cento) sobre o valor do crédito aprovado será devida pelo Contratante somente após o efetivo recebimento dos valores em sua conta corrente.</li>
+            </ul>
+          </section>
+
+          <section class="secao">
+            <h2>6. Do prazo de início e da vigência</h2>
+            <p>O início das atividades está previsto para o dia 21 de outubro de 2026, condicionado ao efetivo pagamento da entrada. O presente contrato terá vigência de 180 (cento e oitenta) dias, iniciando-se na data do efetivo início dos serviços e encerrando-se automaticamente em 20 de abril de 2027, podendo ser prorrogado ou renovado mediante novo acordo entre as partes.</p>
+          </section>
+
+          <section class="secao">
+            <h2>7. Das condições de pagamento</h2>
+            <p><strong>7.1. Opção à vista (PIX):</strong> entrada de R$ 1.250,00 (mil duzentos e cinquenta reais) via PIX; saldo dos valores únicos em até 3 (três) parcelas sem juros; e pacote mensal com desconto de 10% (dez por cento), totalizando R$ 12.420,00 (doze mil, quatrocentos e vinte reais). Valor global do contrato: R$ 21.065,00 (vinte e um mil e sessenta e cinco reais).</p>
+            <p><strong>7.2. Opção parcelada (boleto bancário):</strong> entrada de R$ 1.500,00 (mil e quinhentos reais) via boleto bancário; 6 (seis) parcelas mensais de R$ 2.300,00 (dois mil e trezentos reais); e saldo dos valores únicos em até 3 (três) parcelas sem juros. Valor global do contrato: R$ 22.320,00 (vinte e dois mil, trezentos e vinte reais).</p>
+          </section>
+
+          <section class="secao">
+            <h2>8. Das disposições gerais</h2>
+            <ul>
+              <li><strong>8.1.</strong> Esta proposta tem validade de 24 (vinte e quatro) horas a partir de sua apresentação ou envio ao Contratante.</li>
+              <li><strong>8.2.</strong> Os valores apresentados não incluem despesas de terceiros, tais como taxas bancárias, taxas de lojas de aplicativos ou de provedores de serviços, as quais serão de responsabilidade do Contratante.</li>
+              <li><strong>8.3.</strong> Qualquer serviço, melhoria ou modificação não expressamente descrito neste instrumento será objeto de orçamento complementar.</li>
+              <li><strong>8.4.</strong> Fica eleito o Foro da Comarca de Curitiba, Estado do Paraná, para dirimir quaisquer dúvidas ou controvérsias oriundas do presente contrato, com renúncia expressa a qualquer outro, por mais privilegiado que seja.</li>
+            </ul>
+          </section>
+
+          <section class="secao assinatura-area">
+            <h2>9. Do aceite e da concordância</h2>
+            <p>Ao clicar em “Aceitar Proposta” ou ao assinar o presente instrumento, o Contratante declara ter lido, compreendido e concordado integralmente com todos os termos, cláusulas e condições estabelecidos neste contrato.</p>
+
+            <div class="botoes">
+              <button class="btn-aceitar" id="btn-aceitar" onclick="aceitarProposta()">✅ ACEITAR PROPOSTA</button>
+              <button class="btn-pdf" onclick="gerarPDF()">📄 GERAR PDF DO CONTRATO</button>
             </div>
 
-            <!-- O QUE ESTÁ INCLUSO -->
-            <h2>5. ESCOPO DOS SERVIÇOS</h2>
-            <ul>
-                <li><strong>5.1.</strong> Treinamento na modalidade online/virtual para até 10 (dez) membros da equipe indicados pelo Contratante.</li>
-                <li><strong>5.2.</strong> Até 2 (duas) visitas ou reuniões presenciais por mês para implantação, ajustes técnicos, alinhamento e acompanhamento operacional.</li>
-                <li><strong>5.3.</strong> Hospedagem em infraestrutura em nuvem, banco de dados, backups automáticos e monitoramento 24 (vinte e quatro) horas por dia, 7 (sete) dias por semana.</li>
-                <li><strong>5.4.</strong> Manutenção corretiva do código e deploy de atualizações durante a vigência contratual.</li>
-                <li><strong>5.5.</strong> A taxa de êxito de 2% (dois por cento) sobre o valor de crédito aprovado será devida pelo Contratante apenas e tão somente após o efetivo recebimento dos valores em sua conta corrente.</li>
-            </ul>
-
-            <!-- PRAZO -->
-            <h2>6. PRAZO DE INÍCIO E VIGÊNCIA</h2>
-            <p>O início das atividades está previsto para o dia 21 de outubro de 2026, condicionado ao efetivo pagamento da entrada. O presente contrato terá vigência de 180 (cento e oitenta) dias, iniciando-se na data de efetivo início dos serviços e encerrando-se automaticamente em 20 de abril de 2027, podendo ser prorrogado ou renovado mediante novo acordo entre as partes.</p>
-
-            <!-- FORMA DE PAGAMENTO -->
-            <h2>7. CONDIÇÕES DE PAGAMENTO</h2>
-            <p><strong>7.1 — Opção à Vista (PIX):</strong> Entrada de R$ 1.250,00 (um mil, duzentos e cinquenta reais) via PIX; restante dos valores únicos em até 3 (três) parcelas sem juros; e o pacote mensal com desconto de 10% (dez por cento) no valor total de R$ 12.420,00 (doze mil, quatrocentos e vinte reais). Valor global do contrato: R$ 21.065,00 (vinte e um mil, sessenta e cinco reais).</p>
-            <p><strong>7.2 — Opção Parcelada (Boleto):</strong> Entrada de R$ 1.500,00 (um mil e quinhentos reais) via boleto bancário; 6 (seis) parcelas mensais de R$ 2.300,00 (dois mil, trezentos reais); e restante dos valores únicos em até 3 (três) parcelas sem juros. Valor global do contrato: R$ 22.320,00 (vinte e dois mil, trezentos e vinte reais).</p>
-
-            <!-- DISPOSIÇÕES GERAIS -->
-            <h2>8. DISPOSIÇÕES GERAIS</h2>
-            <ul>
-                <li><strong>8.1.</strong> Esta proposta tem validade de 24 (vinte e quatro) horas a partir de sua apresentação/envio ao Contratante.</li>
-                <li><strong>8.2.</strong> Os valores apresentados não incluem despesas de terceiros, tais como taxas bancárias, taxas de lojas de aplicativos ou provedores de serviços, que serão de responsabilidade do Contratante.</li>
-                <li><strong>8.3.</strong> Qualquer serviço, melhoria ou modificação não expressamente descrito neste instrumento será objeto de orçamento complementar.</li>
-                <li><strong>8.4.</strong> Fica eleito o Foro da Comarca de Curitiba, Estado do Paraná, para dirimir quaisquer dúvidas ou questões oriundas do presente contrato, com renúncia expressa a qualquer outro, por mais privilegiado que seja.</li>
-            </ul>
-
-            <!-- ACEITE -->
-            <div class="assinatura-area">
-                <h2>9. ACEITE E CONCORDÂNCIA</h2>
-                <p>Ao clicar em "Aceitar Proposta" ou assinar o presente instrumento, o Contratante declara ter lido, compreendido e concordado integralmente com todos os termos, cláusulas e condições estabelecidas neste contrato.</p>
-
-                <div class="botoes">
-                    <button class="btn-aceitar" id="btn-aceitar" onclick="aceitarProposta()">✅ ACEITAR PROPOSTA</button>
-                    <button class="btn-pdf" onclick="gerarPDF()">📄 GERAR PDF DO CONTRATO</button>
-                </div>
-
-                <div class="aceito-box" id="aceito-box">
-                    <h3>✅ PROPOSTA ACEITA — VALORES CONFIRMADOS</h3>
-                    <p class="recuo-zero">Por favor, efetue o pagamento da entrada conforme opção escolhida e envie o comprovante para conclusão.</p>
-                </div>
-
-                <div class="assinatura-linhas">
-                    <div class="assinatura-col">
-                        <div class="linha"></div>
-                        <strong>TransitLog — Contratante</strong><br>
-                        <small>Razão Social / Assinatura</small>
-                    </div>
-                    <div class="assinatura-col">
-                        <div class="linha"></div>
-                        <strong>Leandro Canuto — Prestador</strong><br>
-                        <small>CPF: 065.727.039-32</small>
-                    </div>
-                </div>
-                <p style="text-align: center; margin-top: 40px; text-indent: 0;">Curitiba/PR, _____ de _____________ de 2026.</p>
+            <div class="aceito-box" id="aceito-box">
+              <h3 style="margin-top:0;">Proposta aceita</h3>
+              <p class="sem-recuo">Os valores foram confirmados. Efetue o pagamento da entrada conforme a opção escolhida e encaminhe o comprovante para prosseguimento.</p>
             </div>
 
+            <div class="assinatura-linhas">
+              <div class="assinatura-col">
+                <div class="linha"></div>
+                <strong>TransitLog — Contratante</strong><br>
+                <small>Razão Social / Assinatura</small>
+              </div>
+              <div class="assinatura-col">
+                <div class="linha"></div>
+                <strong>Leandro Canuto — Prestador de Serviços</strong><br>
+                <small>CPF: 065.727.039-32</small>
+              </div>
+            </div>
+
+            <p class="rodape-data sem-recuo">Curitiba/PR, _____ de __________________ de 2026.</p>
+          </section>
         </div>
-    </div>
+      </article>
+    </section>
+  </main>
 
-    </div> <!-- Fim conteúdo principal -->
+  <script>
+    const TEMPO_LIMITE = 24 * 60 * 60 * 1000;
 
-    <script>
-        // === CONTADOR REGRESSIVO DE 24 HORAS ===
-        const TEMPO_LIMITE = 24 * 60 * 60 * 1000;
+    function iniciarContador() {
+      let fim = localStorage.getItem('prazoPropostaTransitLog');
 
-        function iniciarContador() {
-            let fim = localStorage.getItem('prazoProposta');
-            
-            if (!fim) {
-                fim = new Date().getTime() + TEMPO_LIMITE;
-                localStorage.setItem('prazoProposta', fim);
-            } else {
-                fim = parseInt(fim);
-            }
+      if (!fim) {
+        fim = Date.now() + TEMPO_LIMITE;
+        localStorage.setItem('prazoPropostaTransitLog', fim);
+      } else {
+        fim = parseInt(fim, 10);
+      }
 
-            const agora = new Date().getTime();
-            let restante = fim - agora;
+      let intervalo = setInterval(() => {
+        const restante = fim - Date.now();
 
-            if (restante <= 0) {
-                mostrarVencido();
-                return;
-            }
-
-            atualizar(restante);
-            setInterval(() => {
-                restante = fim - new Date().getTime();
-                if (restante <= 0) {
-                    mostrarVencido();
-                    return;
-                }
-                atualizar(restante);
-            }, 1000);
+        if (restante <= 0) {
+          clearInterval(intervalo);
+          mostrarVencido();
+          return;
         }
 
-        function atualizar(ms) {
-            const h = Math.floor((ms % (1000*60*60*24)) / (1000*60*60));
-            const m = Math.floor((ms % (1000*60*60)) / (1000*60));
-            const s = Math.floor((ms % (1000*60)) / 1000);
-            
-            document.getElementById('h').textContent = String(h).padStart(2, '0');
-            document.getElementById('m').textContent = String(m).padStart(2, '0');
-            document.getElementById('s').textContent = String(s).padStart(2, '0');
+        atualizarContador(restante);
+      }, 1000);
+
+      const restanteInicial = fim - Date.now();
+      if (restanteInicial <= 0) {
+        clearInterval(intervalo);
+        mostrarVencido();
+        return;
+      }
+      atualizarContador(restanteInicial);
+    }
+
+    function atualizarContador(ms) {
+      const h = Math.floor((ms % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const m = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+      const s = Math.floor((ms % (1000 * 60)) / 1000);
+
+      document.getElementById('h').textContent = String(h).padStart(2, '0');
+      document.getElementById('m').textContent = String(m).padStart(2, '0');
+      document.getElementById('s').textContent = String(s).padStart(2, '0');
+    }
+
+    function mostrarVencido() {
+      const contador = document.getElementById('contador-section');
+      const conteudo = document.getElementById('conteudo-principal');
+      const vencida = document.getElementById('pagina-vencida');
+
+      if (contador) contador.style.display = 'none';
+      if (conteudo) conteudo.style.display = 'none';
+      if (vencida) vencida.style.display = 'block';
+    }
+
+    function aceitarProposta() {
+      localStorage.setItem('propostaAceitaTransitLog', 'SIM');
+
+      const box = document.getElementById('aceito-box');
+      const botao = document.getElementById('btn-aceitar');
+      const contador = document.getElementById('contador-section');
+
+      if (box) box.style.display = 'block';
+
+      if (botao) {
+        botao.disabled = true;
+        botao.textContent = '✅ ACEITA';
+        botao.style.background = 'linear-gradient(135deg, #7d8a97, #9ba8b5)';
+        botao.style.cursor = 'default';
+      }
+
+      if (contador) {
+        contador.innerHTML = `
+          <div class="contador-head">
+            <div class="contador-title">✅ PROPOSTA ACEITA</div>
+            <div class="obs" style="color:#fff;">${new Date().toLocaleDateString('pt-BR')}</div>
+          </div>
+          <div style="font-size:1rem;">Os termos desta proposta foram confirmados pelo contratante.</div>
+        `;
+      }
+    }
+
+    function gerarPDF() {
+      const elemento = document.getElementById('conteudo-para-pdf');
+      const botoes = document.querySelector('.botoes');
+
+      if (!elemento || typeof html2pdf === 'undefined') {
+        alert('Não foi possível carregar o gerador de PDF.');
+        return;
+      }
+
+      if (botoes) botoes.style.display = 'none';
+
+      const hoje = new Date().toLocaleDateString('pt-BR').replace(/\//g, '-');
+      const opcoes = {
+        margin: [30, 20, 20, 30],
+        filename: `Proposta_Contrato_TransitLog_${hoje}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: '#ffffff'
+        },
+        jsPDF: {
+          unit: 'mm',
+          format: 'a4',
+          orientation: 'portrait'
+        },
+        pagebreak: {
+          mode: ['css', 'legacy']
         }
+      };
 
-        function mostrarVencido() {
-            document.getElementById('contador-section').style.display = 'none';
-            document.getElementById('conteudo-principal').style.display = 'none';
-            document.getElementById('pagina-vencida').style.display = 'block';
-        }
+      html2pdf()
+        .set(opcoes)
+        .from(elemento)
+        .save()
+        .then(() => {
+          if (botoes) botoes.style.display = 'flex';
+        })
+        .catch(() => {
+          if (botoes) botoes.style.display = 'flex';
+          alert('Ocorreu um erro ao gerar o PDF.');
+        });
+    }
 
-        function aceitarProposta() {
-            localStorage.setItem('propostaAceita', 'SIM');
-            document.getElementById('aceito-box').style.display = 'block';
-            document.getElementById('btn-aceitar').disabled = true;
-            document.getElementById('btn-aceitar').style.background = '#94a3b8';
-            document.getElementById('btn-aceitar').innerText = '✅ ACEITA';
-            document.getElementById('contador-section').innerHTML = 
-                '<div style="background:#dcfce7;color:#166534;padding:15px;border-radius:8px;">' +
-                '<strong>✅ PROPOSTA ACEITA — ' + new Date().toLocaleDateString('pt-BR') + '</strong></div>';
-        }
+    document.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('propostaAceitaTransitLog') === 'SIM') {
+        aceitarProposta();
+      }
+      iniciarContador();
 
-        // === GERAR PDF COM FORMATAÇÃO ABNT ===
-        function gerarPDF() {
-            const elemento = document.getElementById('conteudo-para-pdf');
-            const opcoes = {
-                margin: [30, 40, 30, 40], // superior, direita, inferior, esquerda — em mm (ABNT: 3cm nas laterais)
-                filename: 'Contrato_TransitLog_' + new Date().toLocaleDateString('pt-BR').replace(/\//g, '-') + '.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true },
-                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-                pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-            };
+      const observers = document.querySelectorAll('.reveal');
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.animationPlayState = 'running';
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
 
-            const botaoOriginal = document.querySelector('.botoes');
-            botaoOriginal.style.display = 'none'; // Esconde os botões temporariamente
-
-            html2pdf().set(opcoes).from(elemento).save().then(() => {
-                botaoOriginal.style.display = 'flex'; // Mostra os botões novamente após gerar
-                alert('✅ PDF gerado com sucesso! Verifique a pasta de downloads.');
-            });
-        }
-
-        // Verificar se já foi aceita
-        if (localStorage.getItem('propostaAceita') === 'SIM') {
-            window.addEventListener('load', aceitarProposta);
-        }
-
-        // Iniciar contador
-        iniciarContador();
-    </script>
+      observers.forEach(el => {
+        el.style.animationPlayState = 'paused';
+        io.observe(el);
+      });
+    });
+  </script>
 </body>
 </html>
+
+
+
+
+
+
