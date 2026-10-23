@@ -1,0 +1,38 @@
+# ============================================================
+# Render Blueprint — Infraestrutura como Código
+# Deploy automático: https://dashboard.render.com/blueprints
+#
+# Este arquivo cria automaticamente:
+#   1. Um Web Service (Flask + Gunicorn)
+#   2. Um banco PostgreSQL nativo do Render (injeta DATABASE_URL automaticamente)
+#
+# Como usar:
+#   - Opção A (mais fácil): suba este projeto no GitHub, no Render clique em
+#     "New +" > "Blueprint" > selecione o repositório. Tudo é criado automático.
+#   - Opção B: se preferir usar o Supabase como banco, remova a seção "databases"
+#     abaixo e configure DATABASE_URL manualmente nas Environment Variables.
+# ============================================================
+
+databases:
+  - name: sistema-gestao-db
+    plan: free
+    databaseName: sistema_gestao
+    user: sistema_gestao
+
+services:
+  - type: web
+    name: sistema-gestao
+    runtime: python
+    plan: free
+    buildCommand: "pip install -r requirements.txt && python init_db.py"
+    startCommand: "gunicorn app:app --bind 0.0.0.0:$PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.9"
+      # Vincula explicitamente a URL do PostgreSQL criado por este Blueprint.
+      - key: DATABASE_URL
+        fromDatabase:
+          name: sistema-gestao-db
+          property: connectionString
+    healthCheckPath: /health
+    autoDeploy: true
